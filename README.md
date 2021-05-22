@@ -17,5 +17,5 @@
  
 
 
-## [Live Site](https://employees-management-sys.herokuapp.com/)
-https://employees-management-sys.herokuapp.com/
+## [Live Site](https://emp-manage-sys.herokuapp.com/)
+https://emp-manage-sys.herokuapp.com/
