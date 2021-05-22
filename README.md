@@ -12,6 +12,7 @@
 - Express.js
 - MongoDB
 - Mongoose
+- Passport.js
  
 
 
