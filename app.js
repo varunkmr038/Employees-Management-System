@@ -14,7 +14,9 @@ const userRoutes = require("./routes/users");
 const User = require("./models/usermodel");
 
 //connecting to mongodb database
-mongoose.connect("mongodb://localhost/Employee", {
+const db =
+  "mongodb+srv://varun:1234@cluster0.icwf7.mongodb.net/Employee?retryWrites=true&w=majority";
+mongoose.connect(db, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
