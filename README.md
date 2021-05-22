@@ -6,6 +6,7 @@
 - HTML
 - CSS
 - Bootstrap
+- EJS
 - Node.js
 - Express.js
 - MongoDB
