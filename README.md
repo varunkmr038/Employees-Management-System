@@ -1,0 +1,17 @@
+# Employee Database Management System     <img align="center" width="60" height="50" src="public/img/icon.jpg">
+## An easy to use Employee Management System Website which help Administrator to manage and keep track of Employees. 
+### The Website performs all the CRUD (Create Read Update Delete) operations on Employees Data.
+### Site has been hosted on heroku and database is connected to mongoDB atlas.
+## :rocket: Tech Stack used: 
+- HTML
+- CSS
+- Bootstrap
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+ 
+
+
+## [Live Site](https://employees-management-sys.herokuapp.com/)
+https://employees-management-sys.herokuapp.com/
