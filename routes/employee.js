@@ -4,6 +4,7 @@ var opts = { runValidators: true };
 const passport = require("passport");
 
 const employee = require("../models/employee");
+const { route } = require("./users");
 
 // Checks if user is authenticated
 function isAuthenticatedUser(req, res, next) {
