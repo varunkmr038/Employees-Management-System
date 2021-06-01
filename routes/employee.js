@@ -18,18 +18,21 @@ function isAuthenticatedUser(req, res, next) {
 //get routes starts here
 router.get("/home", isAuthenticatedUser, (req, res) => {
   employee.find({}).then((employee) => {
-    res.render("index", { employee: employee });
+    res.render("index", {
+      employee: employee,
+      title: "Welcome to Employee Database System",
+    });
   });
 });
 
 // add employee
 router.get("/home/new", isAuthenticatedUser, (req, res) => {
-  res.render("new");
+  res.render("new", { title: "Add New Employee" });
 });
 
 // search page
 router.get("/home/search", isAuthenticatedUser, (req, res) => {
-  res.render("search", { employee: "" });
+  res.render("search", { employee: "", title: "Search Employees" });
 });
 
 //search employee
@@ -40,12 +43,12 @@ router.get("/home/searchemp", (req, res) => {
     employee
       .find(searchQuery)
       .then((employee) => {
-        res.render("search", { employee: employee });
+        res.render("search", { employee: employee, title: "Search Employees" });
       })
       .catch((err) => {
         // console.log(err);
       });
-  } else res.render("search", { employee: "" });
+  } else res.render("search", { employee: "", title: "Search Employees" });
 });
 
 // update page
@@ -55,7 +58,7 @@ router.get("/home/update:id", (req, res) => {
   employee
     .findOne(searchQuery)
     .then((employee) => {
-      res.render("update", { employee: employee });
+      res.render("update", { employee: employee, title: "Update Employee" });
     })
     .catch((err) => {
       // console.log(err);

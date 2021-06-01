@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 80;
 const path = require("path");
+const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const flash = require("connect-flash");
@@ -13,10 +14,10 @@ const employeeRouter = require("./routes/employee");
 const userRoutes = require("./routes/users");
 const User = require("./models/usermodel");
 
+dotenv.config({ path: "./config.env" });
+
 //connecting to mongodb database
-// mongodb+srv://varun:1234@cluster0.icwf7.mongodb.net/test (mongodb compass)
-const db =
-  "mongodb+srv://varun:1234@cluster0.icwf7.mongodb.net/Employee?retryWrites=true&w=majority";
+const db = process.env.DATABASE;
 mongoose.connect(db, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -33,7 +34,7 @@ app.use(methodOverride("_method"));
 //session
 app.use(
   session({
-    secret: "nodejs",
+    secret: "Employee Database System",
     resave: true,
     saveUninitialized: true,
   })
