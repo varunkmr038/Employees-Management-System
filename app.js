@@ -14,6 +14,7 @@ const userRoutes = require("./routes/users");
 const User = require("./models/usermodel");
 
 //connecting to mongodb database
+// mongodb+srv://varun:1234@cluster0.icwf7.mongodb.net/test (mongodb compass)
 const db =
   "mongodb+srv://varun:1234@cluster0.icwf7.mongodb.net/Employee?retryWrites=true&w=majority";
 mongoose.connect(db, {
@@ -55,6 +56,7 @@ app.use((req, res, next) => {
   res.locals.success_msg = req.flash("success_msg");
   res.locals.failure_msg = req.flash("failure_msg");
   res.locals.error = req.flash("error");
+  res.locals.currentUser = req.user;
   next();
 });
 
