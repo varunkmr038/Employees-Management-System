@@ -26,6 +26,29 @@ router.get("/forgot", (req, res) => {
   res.render("forgot", { title: "Forgot Password" });
 });
 
+router.get("/reset/:token", (req, res) => {
+  User.findOne({
+    resetPasswordToken: req.params.token,
+    resetPasswordExpires: { $gt: Date.now() },
+  })
+    .then((user) => {
+      if (!user) {
+        req.flash(
+          "failure_msg",
+          "Password Reset Token is invalid or has been expired"
+        );
+        return res.redirect("/forgot");
+      }
+      res.render("newpassword", {
+        token: req.params.token,
+        title: "New Password",
+      });
+    })
+    .catch((err) => {
+      req.flash("error", "ERROR" + err);
+      res.redirect("/forgot");
+    });
+});
 //POST routes
 router.post(
   "/",
@@ -59,11 +82,9 @@ router.post("/signup", (req, res) => {
 // Routes to handle forgot password
 
 router.post("/forgot", (req, res, next) => {
-  let recoverPassword = "";
-
   async.waterfall([
     (done) => {
-      crypto.randomBytes(30, (err, buf) => {
+      crypto.randomBytes(20, (err, buf) => {
         let token = buf.toString("hex");
         done(err, token);
       });
@@ -78,9 +99,10 @@ router.post("/forgot", (req, res, next) => {
           }
 
           // if the user exists
-          userPasswordToken = token;
-          userPasswordExpires = Date.now() + 1800000; //30 mins
+          user.resetPasswordToken = token;
+          user.resetPasswordExpires = Date.now() + 1800000; //30 mins
 
+          // save in database
           user.save((err) => {
             done(err, token, user);
           });
@@ -95,7 +117,7 @@ router.post("/forgot", (req, res, next) => {
       // create reusable transporter object using the default SMTP transport
       let smtpTransport = nodemailer.createTransport({
         service: "yahoo",
-        port: 465,
+        port: 587,
         secure: false,
         auth: {
           user: process.env.EMAIL,
@@ -124,6 +146,78 @@ router.post("/forgot", (req, res, next) => {
         );
         res.redirect("/forgot");
       });
+    },
+  ]);
+});
+
+// change password
+router.post("/reset/:token", (req, res) => {
+  let { password, confirmpassword } = req.body;
+
+  async.waterfall([
+    (done) => {
+      User.findOne({
+        resetPasswordToken: req.params.token,
+        resetPasswordExpires: { $gt: Date.now() },
+      })
+        .then((user) => {
+          if (password != confirmpassword) {
+            req.flash("failure_msg", `Passwords don't match ! Enter Again`);
+            return res.redirect(`/reset/${req.params.token}`);
+          }
+
+          if (!user) {
+            req.flash(
+              "failure_msg",
+              "Password Reset Token is invalid or has been expired"
+            );
+            return res.redirect("/forgot");
+          }
+
+          user.setPassword(req.body.password, (err) => {
+            user.resetPasswordToken = undefined;
+            user.resetPasswordExpires = undefined;
+
+            user.save((err) => {
+              done(err, user);
+            });
+          });
+        })
+        .catch((err) => {
+          req.flash("error", "ERROR" + err);
+          res.redirect("/forgot");
+        });
+    },
+    (user) => {
+      // create reusable transporter object using the default SMTP transport
+      let smtpTransport = nodemailer.createTransport({
+        service: "yahoo",
+        port: 587,
+        secure: false,
+        auth: {
+          user: process.env.EMAIL,
+          pass: process.env.PASSWORD,
+        },
+      });
+
+      let mailOptions = {
+        to: user.email,
+        from: `Varun Kumar ${process.env.EMAIL}`,
+        subject: "Your Password is changed for Employee Database Website",
+        text:
+          "Hello, " +
+          user.name +
+          "\n\n" +
+          "This is the confirmation that the password for your account on Employee Database Website has been changed",
+      };
+
+      smtpTransport.sendMail(mailOptions, (err) => {
+        req.flash("success_msg", "Your Password has been changed");
+        res.redirect("/");
+      });
+    },
+    (err) => {
+      res.redirect("/");
     },
   ]);
 });
