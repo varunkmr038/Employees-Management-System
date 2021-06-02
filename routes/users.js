@@ -7,6 +7,15 @@ const nodemailer = require("nodemailer");
 
 const User = require("../models/usermodel");
 
+// Checks if user is authenticated
+function isAuthenticatedUser(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  req.flash("failure_msg", "Please Login first to access this page.");
+  res.redirect("/");
+}
+
 //Get routes
 router.get("/", (req, res) => {
   res.render("login", { title: "Login | Employee Database System" });
@@ -49,6 +58,11 @@ router.get("/reset/:token", (req, res) => {
       res.redirect("/forgot");
     });
 });
+
+router.get("/changepassword", isAuthenticatedUser, (req, res) => {
+  res.render("changepassword", { title: "Change Password" });
+});
+
 //POST routes
 router.post(
   "/",
@@ -72,9 +86,27 @@ router.post("/signup", (req, res) => {
       req.flash("error_msg", "ERROR: " + err);
       res.redirect("/signup");
     }
-    passport.authenticate("local")(req, res, () => {
+    passport.authenticate("local-signup")(req, res, () => {
       req.flash("success_msg", "Account created successfully");
       res.redirect("/");
+    });
+  });
+});
+
+router.post("/changepassword", (req, res) => {
+  let { password, confirmpassword } = req.body;
+
+  if (password != confirmpassword) {
+    req.flash("failure_msg", `Passwords don't match ! Enter Again`);
+    return res.redirect(`/changepassword`);
+  }
+
+  User.findOne({ email: req.user.email }).then((user) => {
+    user.setPassword(password, (err) => {
+      user.save((done) => {
+        req.flash("success_msg", "Your Password has been changed");
+        res.redirect("/home");
+      });
     });
   });
 });
