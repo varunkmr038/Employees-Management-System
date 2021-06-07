@@ -6,10 +6,9 @@
 ### :heavy_check_mark: Added User authentication using passport.js
 - - - -
 ## :rocket: Tech Stack used: 
-- HTML     
+- EJS       
 - CSS         
 - Bootstrap   
-- EJS   
 - Node.js  
 - Express.js
 - MongoDB
@@ -23,3 +22,5 @@
 
 ## [Live Site](https://emp-manage-sys.herokuapp.com/)
 https://emp-manage-sys.herokuapp.com/
+
+![Home_page](https://user-images.githubusercontent.com/74452458/121063115-89e63080-c7e3-11eb-8117-01e5dd77cde8.png)
