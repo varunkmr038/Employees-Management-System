@@ -6,7 +6,7 @@
 ### :heavy_check_mark: Added User authentication using passport.js
 - - - -
 ## :rocket: Tech Stack used: 
-- HTML        - Node.js
+- HTML    <br>    * Node.js
 - CSS         - Express.js
 - Bootstrap   - MongoDB
 - EJS         - Mongoose
