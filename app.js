@@ -34,7 +34,7 @@ app.use(methodOverride("_method"));
 //session
 app.use(
   session({
-    secret: "Employee Database System",
+    secret: "Employees Database System",
     resave: true,
     saveUninitialized: true,
   })
